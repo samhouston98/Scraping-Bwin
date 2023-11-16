@@ -23,11 +23,10 @@ function parseHtml(html) {
     const $ = cheerio.load(html);
     let oddsData = [];
 
-    $('.option').each((index, element) => {
+    $('.option-indicator').each((index, element) => {
         const teamName = $(element).find('.name').text().trim();
         const oddsValue = $(element).find('.value.option-value').text().trim();
 
-        // If teamName and oddsValue are not empty, add them to the oddsData array
         if (teamName && oddsValue) {
             oddsData.push({
                 teamName,
@@ -39,20 +38,18 @@ function parseHtml(html) {
     return oddsData;
 }
 
-
 // Function to save data to CSV
 function saveToCsv(data, filename) {
-    // Format the data as CSV
-    // Example: const csvData = data.map(item => `${item.teamName},${item.oddsValue}`).join('\n');
+    const headers = 'Team Name,Odds Value\n';
+    const csvData = headers + data.map(item => `${item.teamName},${item.oddsValue}`).join('\n');
 
-    // Ensure the directory exists
     const dir = path.resolve(__dirname, 'output');
     if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir);
     }
 
-    // Write to file
     fs.writeFileSync(path.resolve(dir, filename), csvData, 'utf8');
+    console.log(`Data saved to ${filename}`);
 }
 
 // Main function to orchestrate the scraping
@@ -60,7 +57,7 @@ async function scrapeOdds() {
     const html = await fetchData(url);
     if (html) {
         const oddsData = parseHtml(html);
-        const filename = 'odds.csv'; // You can add logic to create a dynamic filename
+        const filename = 'ScotlandVsGeorgia.csv'; // Dynamic filename
         saveToCsv(oddsData, filename);
     }
 }
@@ -70,4 +67,3 @@ setInterval(scrapeOdds, 120000); // 120000 milliseconds = 2 minutes
 
 // Initial invocation
 scrapeOdds();
-
