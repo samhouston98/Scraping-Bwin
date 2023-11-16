@@ -77,9 +77,9 @@ async function scrapeOdds() {
     if (html) {
         const oddsData = parseHtml(html);
         if (oddsData.length > 0) {
-            const matchDate = '2023-11-16'; // Adjust as needed
-            const participant1 = 'England'; // Adjust as needed
-            const participant2 = 'Malta'; // Adjust as needed
+            const matchDate = '2023-11-17'; 
+            const participant1 = 'England'; 
+            const participant2 = 'Malta'; 
             const filename = `${participant1}_vs_${participant2}_${matchDate}.csv`;
             saveToCsv(oddsData, filename);
         } else {
